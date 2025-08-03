@@ -11,6 +11,6 @@ ApplicationWindow {
     StackView {
         id: stack
         anchors.fill: parent
-        initialItem: HomePage {}
+        initialItem: ProfileEditor {}
     }
 }
