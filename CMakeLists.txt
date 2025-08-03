@@ -4,7 +4,7 @@ project(thevpnov VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Quick)
+find_package(Qt6 REQUIRED COMPONENTS Quick SQL)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
@@ -19,6 +19,7 @@ qt_add_qml_module(thevpnov
         Main.qml
         QML_FILES HomePage.qml
         QML_FILES ProfileEditor.qml
+        SOURCES profilemanager.h profilemanager.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -33,7 +34,7 @@ set_target_properties(thevpnov PROPERTIES
 )
 
 target_link_libraries(thevpnov
-    PRIVATE Qt6::Quick
+    PRIVATE Qt6::Quick Qt6::Sql
 )
 
 include(GNUInstallDirs)
