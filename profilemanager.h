@@ -17,8 +17,10 @@ public:
     explicit ProfileManager(QObject *parent = nullptr);
     ~ProfileManager();
 
-    Q_INVOKABLE bool addProfile(const QString &host, const QString &username, const QString &password);
+    Q_INVOKABLE bool addProfile(const QString &host, const int &port, const QString &username, const QString &password);
     Q_INVOKABLE QList<QVariantMap> getProfiles();
+    Q_INVOKABLE bool deleteProfile(int id);
+
 
 
 signals:

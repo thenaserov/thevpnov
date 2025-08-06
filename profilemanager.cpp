@@ -12,11 +12,12 @@ ProfileManager::~ProfileManager()
     delete this;
 }
 
-bool ProfileManager::addProfile(const QString &host, const QString &username, const QString &password)
+bool ProfileManager::addProfile(const QString &host, const int &port, const QString &username, const QString &password)
 {
     QSqlQuery query;
-    query.prepare("INSERT INTO profiles (host, username, password) VALUES (?, ?, ?)");
+    query.prepare("INSERT INTO profiles (host, port, username, password) VALUES (?, ?, ?, ?)");
     query.addBindValue(host);
+    query.addBindValue(port);
     query.addBindValue(username);
     query.addBindValue(password);
 
@@ -28,6 +29,19 @@ bool ProfileManager::addProfile(const QString &host, const QString &username, co
     return true;
 }
 
+bool ProfileManager::deleteProfile(int id)
+{
+    QSqlQuery query;
+    query.prepare("DELETE FROM profiles WHERE id = ?");
+    query.addBindValue(id);
+    if (!query.exec()) {
+        qWarning() << "Failed to delete profile:" << query.lastError();
+        return false;
+    }
+    return true;
+}
+
+
 QList<QVariantMap> ProfileManager::getProfiles()
 {
     QList<QVariantMap> profiles;
@@ -38,7 +52,7 @@ QList<QVariantMap> ProfileManager::getProfiles()
     }
 
     QSqlQuery query(db);
-    if (!query.exec("SELECT id, host, username, password FROM profiles")) {
+    if (!query.exec("SELECT id, port, host, username, password FROM profiles")) {
         qWarning() << "Failed to fetch profiles:" << query.lastError().text();
         return profiles;
     }
@@ -47,6 +61,7 @@ QList<QVariantMap> ProfileManager::getProfiles()
         QVariantMap profile;
         profile["id"] = query.value("id");
         profile["host"] = query.value("host");
+        profile["port"] = query.value("port");
         profile["username"] = query.value("username");
         profile["password"] = query.value("password");
 
@@ -56,12 +71,11 @@ QList<QVariantMap> ProfileManager::getProfiles()
     return profiles;
 }
 
-
 void ProfileManager::initializeDatabase()
 {
     db = QSqlDatabase::addDatabase("QSQLITE");
-    QString dbPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-
+    // QString dbPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QString dbPath = "/Users/thenaserov/Documents/thevpnov";
     QDir().mkpath(dbPath);
     db.setDatabaseName(dbPath + "/profiles.db");
 
@@ -72,12 +86,13 @@ void ProfileManager::initializeDatabase()
 
     QSqlQuery query;
     QString createTable = R"(
-        CREATE TABLE IF NOT EXISTS profiles (
+        CREATE TABLE profiles (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             host TEXT NOT NULL,
+            port INTEGER NOT NULL DEFAULT 22,
             username TEXT NOT NULL,
             password TEXT NOT NULL
-        )
+        );
     )";
 
     if (!query.exec(createTable)) {

@@ -28,6 +28,28 @@ Item {
             }
         }
 
+        //Port Row
+        Row {
+            spacing: 10
+
+            Label {
+                text: "Port:"
+                font.pixelSize: 18
+                color: "white"
+                width: 80
+            }
+
+            TextField {
+                id: portField
+                placeholderText: "22"
+                font.pixelSize: 18
+                color: "white"
+                width: 200
+                inputMethodHints: Qt.ImhDigitsOnly
+                text: "22"
+            }
+        }
+
         // Username row
         Row {
             spacing: 10
@@ -71,7 +93,7 @@ Item {
         Button {
             text: "Save Profile"
             onClicked: {
-                const success = profileManager.addProfile(hostField.text, usernameField.text, passwordField.text)
+                const success = profileManager.addProfile(hostField.text, parseInt(portField.text), usernameField.text, passwordField.text)
                 if (success)
                     console.log("Profile saved!")
                 else
@@ -98,11 +120,12 @@ Item {
                     spacing: 20
 
                     Text { text: model.host; color: "white" }
+                    Text { text: model.port; color: "white" }
                     Text { text: model.username; color: "lightgray" }
                     Text { text: model.password; color: "lightgray" }
 
                     Button {
-                        text: "Delete"
+                        text: "X"
                         onClicked: {
                             profileManager.deleteProfile(model.id)
                             profileListView.model.remove(index)
@@ -122,6 +145,7 @@ Item {
                     profileListView.model.append({
                         "id": profiles[i].id,  // Pass id for delete operation
                         "host": profiles[i].host,
+                        "port": profiles[i].port,
                         "username": profiles[i].username,
                         "password": profiles[i].password
                     })
