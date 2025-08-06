@@ -100,11 +100,19 @@ Item {
                     Text { text: model.host; color: "white" }
                     Text { text: model.username; color: "lightgray" }
                     Text { text: model.password; color: "lightgray" }
+
+                    Button {
+                        text: "Delete"
+                        onClicked: {
+                            profileManager.deleteProfile(model.id)
+                            profileListView.model.remove(index)
+                        }
+                    }
                 }
             }
         }
 
-        // Load profiles button for demonstration
+        // Load profiles button
         Button {
             text: "Load Profiles"
             onClicked: {
@@ -112,6 +120,7 @@ Item {
                 profileListView.model.clear()
                 for (let i = 0; i < profiles.length; ++i) {
                     profileListView.model.append({
+                        "id": profiles[i].id,  // Pass id for delete operation
                         "host": profiles[i].host,
                         "username": profiles[i].username,
                         "password": profiles[i].password
