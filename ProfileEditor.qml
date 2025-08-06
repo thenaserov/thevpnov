@@ -40,7 +40,26 @@ Item {
             }
 
             TextField {
-                id: userField
+                id: usernameField
+                placeholderText: "e.g., root"
+                font.pixelSize: 18
+                color: "white"
+                width: 200
+            }
+        }
+
+        Row {
+            spacing: 10
+
+            Label {
+                text: "Password:"
+                font.pixelSize: 18
+                color: "white"
+                width: 80
+            }
+
+            TextField {
+                id: passwordField
                 placeholderText: "e.g., root"
                 font.pixelSize: 18
                 color: "white"
@@ -51,10 +70,12 @@ Item {
         // Save Button
         Button {
             text: "Save Profile"
-            width: 150
             onClicked: {
-                console.log("Saving profile:", hostField.text, userField.text)
-                // Later: save to SQLite
+                const success = profileManager.addProfile(hostField.text, usernameField.text, passwordField.text)
+                if (success)
+                    console.log("Profile saved!")
+                else
+                    console.log("Failed to save profile.")
             }
         }
     }

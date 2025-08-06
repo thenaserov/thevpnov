@@ -10,7 +10,6 @@ ProfileManager::ProfileManager(QObject *parent)
 ProfileManager::~ProfileManager()
 {
     delete this;
-    delete db;
 }
 
 bool ProfileManager::addProfile(const QString &host, const QString &username, const QString &password)
@@ -48,12 +47,14 @@ QVariantList ProfileManager::getProfiles()
 
 void ProfileManager::initializeDatabase()
 {
-    db = new QSqlDatabase();
-    db->addDatabase("QSQLITE");
-    db->setDatabaseName("profiles.db");
+    db = QSqlDatabase::addDatabase("QSQLITE");
+    QString dbPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
 
-    if (!db->open()) {
-        qDebug() << "Failed to open database:" << db->lastError().text();
+    QDir().mkpath(dbPath);
+    db.setDatabaseName(dbPath + "/profiles.db");
+
+    if (!db.open()) {
+        qDebug() << "Failed to open database:" << db.lastError().text();
         return;
     }
 
@@ -70,6 +71,7 @@ void ProfileManager::initializeDatabase()
     if (!query.exec(createTable)) {
         qDebug() << "Failed to create table:" << query.lastError().text();
     } else {
-        qDebug() << "Database initialized and table ready.";
+        qDebug() << "Database initialized at:" << db.databaseName();
     }
 }
+

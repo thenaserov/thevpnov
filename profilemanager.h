@@ -7,6 +7,8 @@
 #include <QSqlError>
 #include <QDebug>
 #include <QVariant>
+#include <QStandardPaths>
+#include <QDir>
 
 class ProfileManager : public QObject {
     Q_OBJECT
@@ -23,7 +25,7 @@ signals:
 
 private:
     void initializeDatabase();
-    QSqlDatabase *db = nullptr;
+    QSqlDatabase db;
 
 };
 

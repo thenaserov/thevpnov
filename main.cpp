@@ -1,5 +1,8 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
+
+#include "profilemanager.h"
 
 int main(int argc, char *argv[])
 {
@@ -12,7 +15,8 @@ int main(int argc, char *argv[])
         &app,
         []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);
+    ProfileManager manager;
     engine.loadFromModule("thevpnov", "Main");
-
+    engine.rootContext()->setContextProperty("profileManager", &manager);
     return app.exec();
 }
