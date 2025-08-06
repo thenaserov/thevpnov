@@ -28,10 +28,20 @@ bool ProfileManager::addProfile(const QString &host, const QString &username, co
     return true;
 }
 
-QVariantList ProfileManager::getProfiles()
+QList<QVariantMap> ProfileManager::getProfiles()
 {
-    QVariantList profileList;
-    QSqlQuery query("SELECT id, host, username, password FROM profiles");
+    QList<QVariantMap> profiles;
+
+    if (!db.isOpen()) {
+        qWarning() << "Database is not open.";
+        return profiles;
+    }
+
+    QSqlQuery query(db);
+    if (!query.exec("SELECT id, host, username, password FROM profiles")) {
+        qWarning() << "Failed to fetch profiles:" << query.lastError().text();
+        return profiles;
+    }
 
     while (query.next()) {
         QVariantMap profile;
@@ -39,11 +49,13 @@ QVariantList ProfileManager::getProfiles()
         profile["host"] = query.value("host");
         profile["username"] = query.value("username");
         profile["password"] = query.value("password");
-        profileList.append(profile);
+
+        profiles.append(profile);
     }
 
-    return profileList;
+    return profiles;
 }
+
 
 void ProfileManager::initializeDatabase()
 {

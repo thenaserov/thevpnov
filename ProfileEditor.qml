@@ -78,5 +78,46 @@ Item {
                     console.log("Failed to save profile.")
             }
         }
+
+        //
+
+        // Below the form, add the ListView to show saved profiles
+        ListView {
+            id: profileListView
+            width: parent.width
+            height: 150
+            model: ListModel {}
+
+            delegate: Rectangle {
+                width: parent.width
+                height: 30
+                color: index % 2 === 0 ? "#333" : "#222"
+
+                Row {
+                    anchors.fill: parent
+                    spacing: 20
+
+                    Text { text: model.host; color: "white" }
+                    Text { text: model.username; color: "lightgray" }
+                    Text { text: model.password; color: "lightgray" }
+                }
+            }
+        }
+
+        // Load profiles button for demonstration
+        Button {
+            text: "Load Profiles"
+            onClicked: {
+                const profiles = profileManager.getProfiles()
+                profileListView.model.clear()
+                for (let i = 0; i < profiles.length; ++i) {
+                    profileListView.model.append({
+                        "host": profiles[i].host,
+                        "username": profiles[i].username,
+                        "password": profiles[i].password
+                    })
+                }
+            }
+        }
     }
 }

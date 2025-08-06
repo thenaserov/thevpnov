@@ -18,7 +18,8 @@ public:
     ~ProfileManager();
 
     Q_INVOKABLE bool addProfile(const QString &host, const QString &username, const QString &password);
-    Q_INVOKABLE QVariantList getProfiles();
+    Q_INVOKABLE QList<QVariantMap> getProfiles();
+
 
 signals:
     void profilesUpdated();  // Notify QML to refresh UI
