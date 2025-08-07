@@ -74,8 +74,7 @@ QList<QVariantMap> ProfileManager::getProfiles()
 void ProfileManager::initializeDatabase()
 {
     db = QSqlDatabase::addDatabase("QSQLITE");
-    // QString dbPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-    QString dbPath = "/Users/thenaserov/Documents/thevpnov";
+    QString dbPath = QCoreApplication::applicationDirPath() + "/profiles.db";
     QDir().mkpath(dbPath);
     db.setDatabaseName(dbPath + "/profiles.db");
 

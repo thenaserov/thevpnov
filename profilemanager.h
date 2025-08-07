@@ -7,7 +7,7 @@
 #include <QSqlError>
 #include <QDebug>
 #include <QVariant>
-#include <QStandardPaths>
+#include <QCoreApplication>
 #include <QDir>
 
 class ProfileManager : public QObject {
