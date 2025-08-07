@@ -18,7 +18,7 @@ qt_add_qml_module(thevpnov
     QML_FILES
         Main.qml
         QML_FILES HomePage.qml
-        QML_FILES ProfileEditor.qml
+        QML_FILES ProfileManager.qml
         SOURCES profilemanager.h profilemanager.cpp
 )
 
