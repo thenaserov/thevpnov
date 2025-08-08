@@ -2,7 +2,6 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
-
 ApplicationWindow {
     id: window
     visible: true
@@ -12,7 +11,7 @@ ApplicationWindow {
     color: "#121212"
 
     property bool isConnected: false
-    property string selectedProfile: "No profile selected"
+    property string selectedProfile: ""
 
     StackView {
         id: stackView
@@ -26,7 +25,7 @@ ApplicationWindow {
                 spacing: 20
 
                 Label {
-                    text: "Selected Profile:\n" + selectedProfile
+                    text: selectedProfile === "" ? "No Profile Selected" : "Selected Profile:\n" + selectedProfile
                     font.pixelSize: 16
                     color: "white"
                     horizontalAlignment: Text.AlignHCenter
@@ -37,8 +36,12 @@ ApplicationWindow {
                     text: isConnected ? "Disconnect" : "Connect"
                     Layout.fillWidth: true
                     onClicked: {
+                        if (selectedProfile === "") {
+                            console.log("No profile selected")
+                            return
+                        }
                         isConnected = !isConnected
-                        console.log(isConnected ? "Connected" : "Disconnected")
+                        console.log(isConnected ? "Connected to " + selectedProfile : "Disconnected")
                     }
                 }
 
@@ -46,10 +49,20 @@ ApplicationWindow {
                     text: "Open Profile Manager"
                     Layout.fillWidth: true
                     onClicked: {
-                        stackView.push("ProfileManager.qml")
+                        stackView.push(Qt.resolvedUrl("ProfileManager.qml"))
                     }
                 }
             }
+        }
+    }
+
+    // Listen for profile selection from ProfileManager
+    Connections {
+        target: stackView.currentItem
+        onProfileSelected: function(profileName) {
+            selectedProfile = profileName
+            isConnected = false
+            stackView.pop()
         }
     }
 }
