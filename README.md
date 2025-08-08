@@ -41,6 +41,20 @@
   ```bash
   ssh -N -D 1080 username@host
   ```
+ or  
+ QML UI  
+  ⇅  
+C++ ConnectionManager (wraps libssh)  
+  ⇅  
+libssh/libssh2 (cross-platform SSH client lib)  
+  ⇅  
+SSH server (remote)  
+  ⇅  
+SOCKS proxy (local, via SSH dynamic forwarding)  
+  ⇅  
+System-wide proxy (configured by your app)  
+
+
 * Wrap process handling in C++ (`QProcess`).
 
 #### 4. **System Proxy Configuration**
@@ -72,3 +86,4 @@
 * Encrypt saved passwords using `QCryptographicHash` or system keychain
 * Ensure tunnel is monitored (restart if killed)
 * Prevent multiple tunnels from launching simultaneously
+

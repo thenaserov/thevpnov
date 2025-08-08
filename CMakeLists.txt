@@ -20,6 +20,7 @@ qt_add_qml_module(thevpnov
         QML_FILES HomePage.qml
         QML_FILES ProfileManager.qml
         SOURCES profilemanager.h profilemanager.cpp
+        SOURCES connectionmanager.h connectionmanager.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

@@ -35,15 +35,21 @@ ApplicationWindow {
                 Button {
                     text: isConnected ? "Disconnect" : "Connect"
                     Layout.fillWidth: true
+
                     onClicked: {
                         if (selectedProfile === "") {
                             console.log("No profile selected")
                             return
                         }
-                        isConnected = !isConnected
-                        console.log(isConnected ? "Connected to " + selectedProfile : "Disconnected")
+
+                        if (isConnected) {
+                            connectionManager.disconnect()
+                        } else {
+                            connectionManager.connectToServer(selectedProfile)
+                        }
                     }
                 }
+
 
                 Button {
                     text: "Open Profile Manager"
