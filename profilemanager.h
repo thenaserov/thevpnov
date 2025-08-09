@@ -22,9 +22,9 @@ public:
     Q_INVOKABLE bool deleteProfile(int id);
 
 
-
 signals:
     void profilesUpdated();  // Notify QML to refresh UI
+    void profileSelected(const QString &profile);
 
 private:
     void initializeDatabase();

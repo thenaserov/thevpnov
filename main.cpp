@@ -25,6 +25,7 @@ int main(int argc, char *argv[])
         []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);
 
+    // Load your main QML file from the module named "thevpnov"
     engine.loadFromModule("thevpnov", "Main");
 
     return app.exec();

@@ -1,21 +1,29 @@
-// ConnectionManager.h
-#pragma once
+#ifndef CONNECTIONMANAGER_H
+#define CONNECTIONMANAGER_H
 
 #include <QObject>
+#include <libssh/libssh.h>
 
-class ConnectionManager : public QObject {
+class ConnectionManager : public QObject
+{
     Q_OBJECT
-    Q_PROPERTY(bool connected READ isConnected NOTIFY connectedChanged)
-
 public:
     explicit ConnectionManager(QObject *parent = nullptr);
-    Q_INVOKABLE void connectToServer(const QString &profile);
-    Q_INVOKABLE void disconnect();
+    ~ConnectionManager();
+
+    bool connectToHost(const QString &host, int port, const QString &username, const QString &password);
+    void disconnect();
+
     bool isConnected() const;
 
 signals:
-    void connectedChanged();
+    void connected();
+    void disconnected();
+    void errorOccurred(const QString &message);
 
 private:
-    bool m_connected = false;
+    ssh_session session;
+    bool connectedFlag;
 };
+
+#endif // CONNECTIONMANAGER_H

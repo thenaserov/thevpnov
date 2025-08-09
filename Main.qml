@@ -33,31 +33,73 @@ ApplicationWindow {
                 }
 
                 Button {
-                    text: isConnected ? "Disconnect" : "Connect"
-                    Layout.fillWidth: true
+                    text: connectionManager.isConnected ? "Disconnect" : "Connect"
 
                     onClicked: {
-                        if (selectedProfile === "") {
-                            console.log("No profile selected")
-                            return
-                        }
-
-                        if (isConnected) {
-                            connectionManager.disconnect()
+                        if (connectionManager.isConnected) {
+                            connectionManager.disconnectFromHost();
                         } else {
-                            connectionManager.connectToServer(selectedProfile)
+                            if (!selectedProfile || selectedProfile === "") {
+                                console.log("No profile selected");
+                                return;
+                            }
+
+                            var parts1 = selectedProfile.split("@");
+                            if (parts1.length !== 2) {
+                                console.log("Invalid profile format, expected username@host:port");
+                                return;
+                            }
+
+                            var username = parts1[0];
+                            var parts2 = parts1[1].split(":");
+                            if (parts2.length !== 2) {
+                                console.log("Invalid profile format, expected username@host:port");
+                                return;
+                            }
+
+                            var host = parts2[0];
+                            var port = parseInt(parts2[1]);
+                            if (isNaN(port)) {
+                                console.log("Invalid port number");
+                                return;
+                            }
+
+                            // Prompt for password (in real app, use a proper password dialog)
+                            var password = passwordField.text; // assuming you have a PasswordField
+
+                            connectionManager.connectToHost(host, port, username, password);
                         }
                     }
                 }
+
+
+                // Optionally connect signals for feedback:
+                Connections {
+                    target: connectionManager
+                    onConnected: console.log("Connected!")
+                    onDisconnected: console.log("Disconnected!")
+                    onErrorOccurred: console.log("Error: " + message)
+                }
+
 
 
                 Button {
                     text: "Open Profile Manager"
                     Layout.fillWidth: true
                     onClicked: {
-                        stackView.push(Qt.resolvedUrl("ProfileManager.qml"))
+                        stackView.push({
+                            item: Qt.resolvedUrl("ProfileManager.qml"),
+                            properties: {
+                                onProfileSelected: function(profileName) {
+                                    selectedProfile = profileName
+                                    isConnected = false
+                                    stackView.pop()
+                                }
+                            }
+                        })
                     }
                 }
+
             }
         }
     }
