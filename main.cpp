@@ -1,32 +1,20 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-
-#include "profilemanager.h"
-#include "connectionmanager.h" // Include your connection class
+#include "connectionmanager.h"
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
+    ConnectionManager connManager;
+
     QQmlApplicationEngine engine;
+    engine.rootContext()->setContextProperty("connectionManager", &connManager);
+    engine.load(QUrl::fromLocalFile("../../../../../Main.qml")); // Load directly from file system
 
-    ProfileManager profileManager;
-    ConnectionManager connectionManager;
-
-    // Set context properties BEFORE loading QML
-    engine.rootContext()->setContextProperty("profileManager", &profileManager);
-    engine.rootContext()->setContextProperty("connectionManager", &connectionManager);
-
-    QObject::connect(
-        &engine,
-        &QQmlApplicationEngine::objectCreationFailed,
-        &app,
-        []() { QCoreApplication::exit(-1); },
-        Qt::QueuedConnection);
-
-    // Load your main QML file from the module named "thevpnov"
-    engine.loadFromModule("thevpnov", "Main");
+    if (engine.rootObjects().isEmpty())
+        return -1;
 
     return app.exec();
 }

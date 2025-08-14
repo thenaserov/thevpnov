@@ -11,10 +11,11 @@ public:
     explicit ConnectionManager(QObject *parent = nullptr);
     ~ConnectionManager();
 
-    bool connectToHost(const QString &host, int port, const QString &username, const QString &password);
-    void disconnect();
+    Q_INVOKABLE bool connectToHost(const QString &host, int port,
+                                   const QString &username, const QString &password);
+    Q_INVOKABLE void disconnect();
+    Q_INVOKABLE bool isConnected() const;
 
-    bool isConnected() const;
 
 signals:
     void connected();
@@ -23,7 +24,7 @@ signals:
 
 private:
     ssh_session session;
-    bool connectedFlag;
+    bool connectedFlag{false};
 };
 
 #endif // CONNECTIONMANAGER_H
